@@ -63,6 +63,15 @@ func Operacion(a *Arbol) int {
 
 }
 
+func InOrden(a *Arbol) {
+	if a == nil {
+		return
+	}
+	InOrden(a.Izq)
+	fmt.Printf(a.Valor)
+	InOrden(a.Der)
+}
+
 func InsertarPila(a string) *Arbol {
 	stack := NewStack()
 	val := strings.Split(a, " ")
@@ -97,7 +106,9 @@ func Menu(s *Stack) {
 			data := scanner.Text()
 			result := InsertarPila(data)
 			fmt.Println(fmt.Sprint("\nPara la ecuacion en posfijo: ", data))
-			fmt.Println(fmt.Sprint("\nEL resultado es: ", Operacion(result)))
+			fmt.Println("\nLa ecuacion en infijo es: \n")
+			InOrden(result)
+			fmt.Println(fmt.Sprint("\n\nEl resultado es: ", Operacion(result)))
 			break
 		}
 	case 2:
@@ -108,6 +119,7 @@ func Menu(s *Stack) {
 	}
 }
 
+/*
 func RecorrerInorden(t *Arbol) {
 	if t == nil {
 		return
@@ -116,7 +128,7 @@ func RecorrerInorden(t *Arbol) {
 	fmt.Print(t.Valor)
 	fmt.Print(" - ")
 	RecorrerInorden(t.Der)
-}
+} */
 
 func main() {
 	stack := NewStack()
