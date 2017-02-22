@@ -5,3 +5,5 @@ INTEGRANTES
 Camilo González Sulvarado 20141020231
 
 Jonathan Javier Sánchez Sanabria 20131020101
+
+José Rodríguez 20131020057
