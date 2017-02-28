@@ -43,26 +43,28 @@ func (s *Stack) Pop() *Arbol {
 
 func Operacion(a *Arbol) int {
 	if a == nil {
-		//fmt.Println("No hay operacion a realizar")
 		return 0
 	} else if a.Valor == "+" {
-		//fmt.Println("Suma")
 		return Operacion(a.Izq) + Operacion(a.Der)
 	} else if a.Valor == "-" {
-		//fmt.Println("Resta")
 		return Operacion(a.Izq) - Operacion(a.Der)
 	} else if a.Valor == "*" {
-		//fmt.Println("Multiplicacion")
 		return Operacion(a.Izq) * Operacion(a.Der)
 	} else if a.Valor == "/" {
-		//fmt.Println("Division")
-		return Operacion(a.Izq) / Operacion(a.Der)
-	} else { //if a.Izq == nil && a.Der == nil{
+		if Operacion(a.Der) == 0 {
+			fmt.Println("***************************")
+			fmt.Println("ERROR DIVISIÓN POR CERO")
+			fmt.Println("***************************")
+		} else {
+			return Operacion(a.Izq) / Operacion(a.Der)
+		}
+		return 0
+	} else {
 		conv, err := strconv.Atoi(a.Valor)
 		if err != nil {
+			fmt.Println("")
 			fmt.Println(".....................")
 			fmt.Println("Error de sintaxis ", a.Valor, "no es un caracter válido")
-			return 0
 		}
 		return conv
 	}
@@ -106,15 +108,16 @@ func Menu(s *Stack) {
 	switch menu {
 	case 1:
 		fmt.Println("--------1: Ingresar una ecuacion--------\n")
-		fmt.Println("Digite la ecuacion en posfijo, separando por espacios:\n")
+		fmt.Print("Digite la ecuacion en posfijo, separando por espacios: ")
 		scanner := bufio.NewScanner(os.Stdin)
 		for scanner.Scan() {
 			data := scanner.Text()
 			result := InsertarPila(data)
-			fmt.Println(fmt.Sprint("\nPara la ecuacion en posfijo: ", data))
-			fmt.Println("\nLa ecuacion en infijo es: \n")
+			fmt.Println(fmt.Sprint("Para la ecuacion en posfijo: ", data))
+			fmt.Print("La ecuacion en infijo es: ")
 			InOrden(result)
-			fmt.Println(fmt.Sprint("\n\nEl resultado es: ", Operacion(result)))
+			fmt.Println("")
+			fmt.Println(fmt.Sprint("El resultado es: ", Operacion(result)))
 			break
 		}
 	case 2:
