@@ -191,6 +191,17 @@ func IntercambiarEcuacion(ecuacion []string, valores []string, variables []strin
 	return result
 }
 
+/* *********************************************************** */
+func InOrden(a *Arbol) {
+	if a == nil {
+		return
+	}
+	InOrden(a.Izquierda)
+	fmt.Printf(a.Valor)
+	InOrden(a.Derecha)
+}
+
+/* *********************************************************** */
 func Menu(s *StackVariables) {
 	var menu int
 	//var variableString string
@@ -203,21 +214,25 @@ func Menu(s *StackVariables) {
 	}
 	switch menu {
 	case 1:
-		fmt.Println("--------1: Ingresar una ecuacion--------\n")
+		fmt.Println("\n--------1: Ingresar una ecuacion--------\n")
 		fmt.Println("Digite la ecuacion en posfijo, separando por espacios")
 		fmt.Println("La ecuación debe terminar con el nombre de la variable (letra en mayúscula)")
 		fmt.Println("**OPCIONAL: nombreDeVariable + ':=' ****")
-		fmt.Print("Ecuación: ")
+		fmt.Print("\n--> Ecuación: ")
 		scanner := bufio.NewScanner(os.Stdin)
 
 		for scanner.Scan() {
+			fmt.Println("")
+			fmt.Println("****SOLUCIÓN*****  ")
+			fmt.Println("")
 			data := scanner.Text()
 			ecuacionNew, variables, variableNew := EncontrarVariable(data)
 			ecuacion := s.ValorVar(variables)
 			ecuacionFinal := IntercambiarEcuacion(ecuacionNew, ecuacion, variables)
-
 			result := InsertarPila(ecuacionFinal)
 			fmt.Println(fmt.Sprint("\nPara la ecuacion en posfijo: ", data))
+			fmt.Print("\nLa ecuacion en infijo es: ")
+			InOrden(result)
 			fmt.Println(fmt.Sprint("\nEL resultado es: ", Operacion(result)))
 			valorFinal := strconv.Itoa(Operacion(result))
 			s.PushV(&Variables{ecuacionFinal, valorFinal, variableNew})
