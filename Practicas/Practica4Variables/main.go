@@ -155,7 +155,7 @@ func (s *StackVariables) VerVariables() {
 
 ************************************************ */
 func (s *StackVariables) verificaVariableValida() bool {
-	for i := 0; i < s.count; i++ {
+	for i := s.count - 1; i < s.count; i++ {
 		//fmt.Println(fmt.Sprint("Variable: ", s.stackV[i].Variable)
 		if s.stackV[i].Variable == "X" {
 			fmt.Println("varible válida")
@@ -231,6 +231,7 @@ func Menu(s *StackVariables) {
 			if s.verificaVariableValida() == false {
 				fmt.Println("***** VARIABLE INVÁLIDA*********")
 			}
+			//fmt.Println("Tamaño cadena ingresad --> ", len(data))
 			break
 		}
 	case 2:
