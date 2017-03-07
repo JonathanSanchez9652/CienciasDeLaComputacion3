@@ -5,15 +5,14 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"regexp"
 	"strconv"
 	"strings"
 )
 
 type Arbol struct {
-	Izq   *Arbol
-	Valor string
-	Der   *Arbol
+	Izquierdo *Arbol
+	Valor     string
+	Derecho   *Arbol
 }
 
 func NewArbol() *Arbol {
@@ -72,16 +71,21 @@ func (s *StackVariables) PopV() *Variables {
 
 func Operacion(a *Arbol) int {
 	if a == nil {
+		//fmt.Println("No hay operacion a realizar")
 		return 0
 	} else if a.Valor == "+" {
-		return Operacion(a.Izq) + Operacion(a.Der)
+		//fmt.Println("Suma")
+		return Operacion(a.Izquierdo) + Operacion(a.Derecho)
 	} else if a.Valor == "-" {
-		return Operacion(a.Izq) - Operacion(a.Der)
+		//fmt.Println("Resta")
+		return Operacion(a.Izquierdo) - Operacion(a.Derecho)
 	} else if a.Valor == "*" {
-		return Operacion(a.Izq) * Operacion(a.Der)
+		//fmt.Println("Multiplicacion")
+		return Operacion(a.Izquierdo) * Operacion(a.Derecho)
 	} else if a.Valor == "/" {
-		return Operacion(a.Izq) / Operacion(a.Der)
-	} else { //if a.Izq == nil && a.Der == nil{
+		//fmt.Println("Division")
+		return Operacion(a.Izquierdo) / Operacion(a.Derecho)
+	} else { //if a.Izquierdo == nil && a.Derecho == nil{
 		conv, _ := strconv.Atoi(a.Valor)
 		return conv
 	}
@@ -95,8 +99,8 @@ func InsertarPila(a string) *Arbol {
 		if arbol.Valor != "+" && arbol.Valor != "-" && arbol.Valor != "*" && arbol.Valor != "/" {
 			stack.Push(arbol)
 		} else {
-			arbol.Der = stack.Pop()
-			arbol.Izq = stack.Pop()
+			arbol.Derecho = stack.Pop()
+			arbol.Izquierdo = stack.Pop()
 			stack.Push(arbol)
 		}
 	}
@@ -123,7 +127,7 @@ func EncontrarVariable(cadenaCompleta string) ([]string, []string, string) {
 	variableNueva := arr[len(arr)-1]
 	arr = arr[:len(arr)-1]
 	for i := 0; i < len(arr); i++ {
-		if arr[i] != "+" && arr[i] != "-" && arr[i] != "*" && arr[i] != "/" && arr[i] != ":=" {
+		if arr[i] != "+" && arr[i] != "-" && arr[i] != "*" && arr[i] != "/" {
 			if _, err := strconv.Atoi(arr[i]); err == nil {
 			} else {
 				variables = append(variables, arr[i])
@@ -141,7 +145,7 @@ func (s *StackVariables) VerVariables() {
 		fmt.Println(fmt.Sprint("Ecuacion:", s.stackV[i].Ecuacion))
 		fmt.Println(fmt.Sprint("Variable: ", s.stackV[i].Variable))
 		fmt.Println(fmt.Sprint("Valor: ", s.stackV[i].Valor))
-		fmt.Println("")
+		fmt.Println("\n")
 	}
 }
 
@@ -171,41 +175,6 @@ func IntercambiarEcuacion(ecuacion []string, valores []string, variables []strin
 		result = strings.Replace(result, variables[i], valores[i], -1)
 	}
 	return result
-}
-
-func tablaSimbolos(dato string) {
-	op := []string{"+", "-", "/", "*", ":="}
-	for i := 0; i < len(op); i++ {
-		if op[i] == dato {
-			fmt.Println(dato, " -> op")
-		}
-	}
-	id := []string{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"}
-	for i := 0; i < len(id); i++ {
-		if id[i] == dato {
-			fmt.Println(dato, " -> id")
-		}
-	}
-	val, _ := strconv.Atoi(dato)
-	if val != 0 {
-		fmt.Println(val, " -> val")
-	}
-}
-
-func expresionesRegulares(dato string) {
-	if regexp.MustCompile("[a-zA-Z]").MatchString(dato) == true {
-		fmt.Printf("Tipo: Id  -> ")
-		fmt.Println("Valor: ", dato)
-	} else if regexp.MustCompile("[+-/-*---:=]").MatchString(dato) == true {
-		fmt.Printf("Tipo: Op  -> ")
-		fmt.Println("Valor: ", dato)
-	} else if regexp.MustCompile("[0-9]").MatchString(dato) == true {
-		fmt.Printf("Tipo: Val -> ")
-		fmt.Println("Valor: ", dato)
-	} else {
-		fmt.Printf("Tipo: Indefinido -> ")
-		fmt.Println("Valor: ", dato)
-	}
 }
 
 func Menu(s *StackVariables) {
@@ -240,7 +209,7 @@ func Menu(s *StackVariables) {
 		s.VerVariables()
 	case 3:
 		fmt.Println("--------3: Salir del programa--------\n")
-		os.Exit(5)
+		os.Exit(3)
 	default:
 		fmt.Println("ERROR 2: La opcion ingresada en el MENU no es valida")
 	}
@@ -249,8 +218,7 @@ func Menu(s *StackVariables) {
 func main() {
 	stack := NewStackVariables()
 	for {
-		fmt.Println("\n*****************************************")
-		fmt.Println("...RESOLUCION DE ECUACIONES EN POSFIJO...\n")
+		fmt.Println("\n...RESOLUCION DE ECUACIONES EN POSFIJO...\n")
 		fmt.Println("------------------MENU------------------\n")
 		fmt.Println("Seleccione una opcion:\n")
 		fmt.Println("1: Ingresar una ecuacion")
