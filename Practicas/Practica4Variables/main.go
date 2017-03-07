@@ -239,30 +239,6 @@ func Menu(s *StackVariables) {
 		fmt.Println("--------2: Ver lista de Variables--------\n")
 		s.VerVariables()
 	case 3:
-		fmt.Println("--------3: Ver lista de Tokens--------\n")
-		scanner := bufio.NewScanner(os.Stdin)
-		scanner.Split(bufio.ScanWords)
-		for scanner.Scan() {
-			data := scanner.Text()
-			if data == "." {
-				break
-			} else {
-				tablaSimbolos(data)
-			}
-		}
-	case 4:
-		fmt.Println("--------4: Ver Expresiones Regulares--------\n")
-		scanner := bufio.NewScanner(os.Stdin)
-		scanner.Split(bufio.ScanWords)
-		for scanner.Scan() {
-			data := scanner.Text()
-			if data == "." {
-				break
-			} else {
-				expresionesRegulares(data)
-			}
-		}
-	case 5:
 		fmt.Println("--------3: Salir del programa--------\n")
 		os.Exit(5)
 	default:
@@ -279,9 +255,7 @@ func main() {
 		fmt.Println("Seleccione una opcion:\n")
 		fmt.Println("1: Ingresar una ecuacion")
 		fmt.Println("2: Ver lista de Variables")
-		fmt.Println("3: Ver lista de Tokens")
-		fmt.Println("4: Ver Expresiones Regulares ")
-		fmt.Println("5: Salir del programa\n")
+		fmt.Println("3: Salir del programa\n")
 		Menu(stack)
 	}
 }
