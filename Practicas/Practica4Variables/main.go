@@ -151,6 +151,24 @@ func (s *StackVariables) VerVariables() {
 	}
 }
 
+/* **********************************************
+
+************************************************ */
+func (s *StackVariables) verificaVariableValida() bool {
+	for i := 0; i < s.count; i++ {
+		//fmt.Println(fmt.Sprint("Variable: ", s.stackV[i].Variable)
+		if s.stackV[i].Variable == "X" {
+			fmt.Println("varible válida")
+			return true
+		}
+	}
+	return false
+}
+
+/* **********************************************
+
+************************************************ */
+
 func (s *StackVariables) ValorVar(names []string) []string {
 	num := []string{}
 	for i := 0; i < len(names); i++ {
@@ -196,7 +214,7 @@ func Menu(s *StackVariables) {
 		fmt.Println("La ecuación debe terminar con el nombre de la variable (letra en mayúscula)")
 		fmt.Println("**OPCIONAL: nombreDeVariable + ':=' ****")
 		scanner := bufio.NewScanner(os.Stdin)
-		fmt.Println("------------>", scanner[0])
+
 		for scanner.Scan() {
 			data := scanner.Text()
 			//variableString = data[len(data)-2]
@@ -210,6 +228,9 @@ func Menu(s *StackVariables) {
 			fmt.Println(fmt.Sprint("\nEL resultado es: ", Operacion(result)))
 			valorFinal := strconv.Itoa(Operacion(result))
 			s.PushV(&Variables{ecuacionFinal, valorFinal, variableNew})
+			if s.verificaVariableValida() == false {
+				fmt.Println("***** VARIABLE INVÁLIDA*********")
+			}
 			break
 		}
 	case 2:
