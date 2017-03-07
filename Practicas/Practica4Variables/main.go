@@ -155,9 +155,10 @@ func (s *StackVariables) VerVariables() {
 
 ************************************************ */
 func (s *StackVariables) verificaVariableValida() bool {
-	for i := s.count - 1; i < s.count; i++ {
-		//fmt.Println(fmt.Sprint("Variable: ", s.stackV[i].Variable)
-		if s.stackV[i].Variable == "X" {
+	variablesValidas := []string{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"}
+	v := s.stackV[s.count-1].Variable
+	for j := 0; j < len(variablesValidas); j++ {
+		if v == variablesValidas[j] {
 			fmt.Println("varible válida")
 			return true
 		}
@@ -217,8 +218,6 @@ func Menu(s *StackVariables) {
 
 		for scanner.Scan() {
 			data := scanner.Text()
-			//variableString = data[len(data)-2]
-			//fmt.Println("------------>", data[0])
 			ecuacionNew, variables, variableNew := EncontrarVariable(data)
 			ecuacion := s.ValorVar(variables)
 			ecuacionFinal := IntercambiarEcuacion(ecuacionNew, ecuacion, variables)
@@ -231,7 +230,7 @@ func Menu(s *StackVariables) {
 			if s.verificaVariableValida() == false {
 				fmt.Println("***** VARIABLE INVÁLIDA*********")
 			}
-			//fmt.Println("Tamaño cadena ingresad --> ", len(data))
+
 			break
 		}
 	case 2:
