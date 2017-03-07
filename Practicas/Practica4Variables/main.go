@@ -151,24 +151,17 @@ func (s *StackVariables) VerVariables() {
 	}
 }
 
-/* **********************************************
-
-************************************************ */
 func (s *StackVariables) verificaVariableValida() bool {
 	variablesValidas := []string{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"}
 	v := s.stackV[s.count-1].Variable
 	for j := 0; j < len(variablesValidas); j++ {
 		if v == variablesValidas[j] {
-			fmt.Println("varible válida")
+			//fmt.Println("varible válida")
 			return true
 		}
 	}
 	return false
 }
-
-/* **********************************************
-
-************************************************ */
 
 func (s *StackVariables) ValorVar(names []string) []string {
 	num := []string{}
@@ -214,6 +207,7 @@ func Menu(s *StackVariables) {
 		fmt.Println("Digite la ecuacion en posfijo, separando por espacios")
 		fmt.Println("La ecuación debe terminar con el nombre de la variable (letra en mayúscula)")
 		fmt.Println("**OPCIONAL: nombreDeVariable + ':=' ****")
+		fmt.Print("Ecuación: ")
 		scanner := bufio.NewScanner(os.Stdin)
 
 		for scanner.Scan() {
@@ -227,10 +221,12 @@ func Menu(s *StackVariables) {
 			fmt.Println(fmt.Sprint("\nEL resultado es: ", Operacion(result)))
 			valorFinal := strconv.Itoa(Operacion(result))
 			s.PushV(&Variables{ecuacionFinal, valorFinal, variableNew})
+
 			if s.verificaVariableValida() == false {
 				fmt.Println("***** VARIABLE INVÁLIDA*********")
+				fmt.Println("***** PROGRAMA TERMINADO*********")
+				os.Exit(3)
 			}
-
 			break
 		}
 	case 2:
@@ -238,6 +234,7 @@ func Menu(s *StackVariables) {
 		s.VerVariables()
 	case 3:
 		fmt.Println("--------3: Salir del programa--------\n")
+		fmt.Println("***** PROGRAMA TERMINADO*********")
 		os.Exit(3)
 	default:
 		fmt.Println("ERROR 2: La opcion ingresada en el MENU no es valida")
@@ -247,12 +244,12 @@ func Menu(s *StackVariables) {
 func main() {
 	stack := NewStackVariables()
 	for {
-		fmt.Println("\n...RESOLUCION DE ECUACIONES EN POSFIJO...\n")
-		fmt.Println("------------------MENU------------------\n")
-		fmt.Println("Seleccione una opcion:\n")
-		fmt.Println("1: Ingresar una ecuacion")
-		fmt.Println("2: Ver lista de Variables")
-		fmt.Println("3: Salir del programa\n")
+		fmt.Println("\n***ECUACIONES EN POSFIJO****\n")
+		fmt.Println("---->Presione la tecla indicada para seleccionar una opción:\n")
+		fmt.Println("Ingresar una ecuacion -> 1 ")
+		fmt.Println("Ver lista de Variables -> 2 ")
+		fmt.Println("Salir del programa -> 3 \n")
+		fmt.Print("Ingrese su selección: ")
 		Menu(stack)
 	}
 }
