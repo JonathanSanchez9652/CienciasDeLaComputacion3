@@ -20,7 +20,7 @@ func NewArbol() *Arbol {
 }
 
 type Stack struct {
-	arb   []*Arbol
+	arbol []*Arbol
 	count int
 }
 
@@ -29,7 +29,7 @@ func NewStack() *Stack {
 }
 
 func (s *Stack) Push(n *Arbol) {
-	s.arb = append(s.arb[:s.count], n)
+	s.arbol = append(s.arbol[:s.count], n)
 	s.count++
 }
 
@@ -38,7 +38,7 @@ func (s *Stack) Pop() *Arbol {
 		return nil
 	}
 	s.count--
-	return s.arb[s.count]
+	return s.arbol[s.count]
 }
 
 type Variables struct {
@@ -71,21 +71,23 @@ func (s *StackVariables) PopV() *Variables {
 
 func Operacion(a *Arbol) int {
 	if a == nil {
-		//fmt.Println("No hay operacion a realizar")
 		return 0
 	} else if a.Valor == "+" {
-		//fmt.Println("Suma")
 		return Operacion(a.Izquierda) + Operacion(a.Derecha)
 	} else if a.Valor == "-" {
-		//fmt.Println("Resta")
 		return Operacion(a.Izquierda) - Operacion(a.Derecha)
 	} else if a.Valor == "*" {
-		//fmt.Println("Multiplicacion")
 		return Operacion(a.Izquierda) * Operacion(a.Derecha)
 	} else if a.Valor == "/" {
-		//fmt.Println("Division")
-		return Operacion(a.Izquierda) / Operacion(a.Derecha)
-	} else { //if a.Izquierda == nil && a.Derecha == nil{
+		if Operacion(a.Derecha) == 0 {
+			fmt.Println("***************************")
+			fmt.Println("ERROR DIVISIÓN POR CERO")
+			fmt.Println("***************************")
+		} else {
+			return Operacion(a.Izquierda) / Operacion(a.Derecha)
+		}
+		return 0
+	} else {
 		conv, _ := strconv.Atoi(a.Valor)
 		return conv
 	}
@@ -179,6 +181,7 @@ func IntercambiarEcuacion(ecuacion []string, valores []string, variables []strin
 
 func Menu(s *StackVariables) {
 	var menu int
+	//var variableString string
 	scanner := bufio.NewScanner(os.Stdin)
 	scanner.Scan()
 	data := scanner.Text()
@@ -189,10 +192,15 @@ func Menu(s *StackVariables) {
 	switch menu {
 	case 1:
 		fmt.Println("--------1: Ingresar una ecuacion--------\n")
-		fmt.Println("Digite la ecuacion en posfijo, separando por espacios:\n")
+		fmt.Println("Digite la ecuacion en posfijo, separando por espacios")
+		fmt.Println("La ecuación debe terminar con el nombre de la variable (letra en mayúscula)")
+		fmt.Println("**OPCIONAL: nombreDeVariable + ':=' ****")
 		scanner := bufio.NewScanner(os.Stdin)
+		fmt.Println("------------>", scanner[0])
 		for scanner.Scan() {
 			data := scanner.Text()
+			//variableString = data[len(data)-2]
+			//fmt.Println("------------>", data[0])
 			ecuacionNew, variables, variableNew := EncontrarVariable(data)
 			ecuacion := s.ValorVar(variables)
 			ecuacionFinal := IntercambiarEcuacion(ecuacionNew, ecuacion, variables)
