@@ -151,6 +151,13 @@ func (s *StackVariables) VerVariables() {
 	}
 }
 
+/* *********************************************************** */
+func (s *StackVariables) imprimirVariable() string {
+	return s.stackV[s.count-1].Variable
+}
+
+/* *********************************************************** */
+
 func (s *StackVariables) verificaVariableValida() bool {
 	variablesValidas := []string{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"}
 	v := s.stackV[s.count-1].Variable
@@ -191,7 +198,6 @@ func IntercambiarEcuacion(ecuacion []string, valores []string, variables []strin
 	return result
 }
 
-/* *********************************************************** */
 func InOrden(a *Arbol) {
 	if a == nil {
 		return
@@ -201,7 +207,6 @@ func InOrden(a *Arbol) {
 	InOrden(a.Derecha)
 }
 
-/* *********************************************************** */
 func Menu(s *StackVariables) {
 	var menu int
 	//var variableString string
@@ -218,29 +223,36 @@ func Menu(s *StackVariables) {
 		fmt.Println("Digite la ecuacion en posfijo, separando por espacios")
 		fmt.Println("La ecuación debe terminar con el nombre de la variable (letra en mayúscula)")
 		fmt.Println("**OPCIONAL: nombreDeVariable + ':=' ****")
-		fmt.Print("\n--> Ecuación: ")
+		fmt.Print("\n--> Ingrese ecuación: ")
 		scanner := bufio.NewScanner(os.Stdin)
 
 		for scanner.Scan() {
-			fmt.Println("")
-			fmt.Println("****SOLUCIÓN*****  ")
-			fmt.Println("")
+
 			data := scanner.Text()
 			ecuacionNew, variables, variableNew := EncontrarVariable(data)
 			ecuacion := s.ValorVar(variables)
 			ecuacionFinal := IntercambiarEcuacion(ecuacionNew, ecuacion, variables)
 			result := InsertarPila(ecuacionFinal)
-			fmt.Println(fmt.Sprint("\nPara la ecuacion en posfijo: ", data))
-			fmt.Print("\nLa ecuacion en infijo es: ")
-			InOrden(result)
-			fmt.Println(fmt.Sprint("\nEL resultado es: ", Operacion(result)))
 			valorFinal := strconv.Itoa(Operacion(result))
 			s.PushV(&Variables{ecuacionFinal, valorFinal, variableNew})
 
+			/*fmt.Println(fmt.Sprint("Ecuacion en posfijo: ", data))
+			fmt.Print("Ecuacion en infijo: ", s.imprimirVariable(), " := ")
+			InOrden(result)
+			fmt.Println("\nResultado: ", Operacion(result))
+			*/
 			if s.verificaVariableValida() == false {
 				fmt.Println("***** VARIABLE INVÁLIDA*********")
 				fmt.Println("***** PROGRAMA TERMINADO*********")
 				os.Exit(3)
+			} else {
+				fmt.Println("")
+				fmt.Println("****SOLUCIÓN*****  ")
+				fmt.Println("")
+				fmt.Println(fmt.Sprint("Ecuacion en posfijo: ", data))
+				fmt.Print("Ecuacion en infijo: ", s.imprimirVariable(), " := ")
+				InOrden(result)
+				fmt.Println("\nResultado: ", s.imprimirVariable(), " = ", Operacion(result))
 			}
 			break
 		}
