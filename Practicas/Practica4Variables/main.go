@@ -151,12 +151,9 @@ func (s *StackVariables) VerVariables() {
 	}
 }
 
-/* *********************************************************** */
 func (s *StackVariables) imprimirVariable() string {
 	return s.stackV[s.count-1].Variable
 }
-
-/* *********************************************************** */
 
 func (s *StackVariables) verificaVariableValida() bool {
 	variablesValidas := []string{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"}
@@ -236,11 +233,6 @@ func Menu(s *StackVariables) {
 			valorFinal := strconv.Itoa(Operacion(result))
 			s.PushV(&Variables{ecuacionFinal, valorFinal, variableNew})
 
-			/*fmt.Println(fmt.Sprint("Ecuacion en posfijo: ", data))
-			fmt.Print("Ecuacion en infijo: ", s.imprimirVariable(), " := ")
-			InOrden(result)
-			fmt.Println("\nResultado: ", Operacion(result))
-			*/
 			if s.verificaVariableValida() == false {
 				fmt.Println("***** VARIABLE INVÁLIDA*********")
 				fmt.Println("***** PROGRAMA TERMINADO*********")
