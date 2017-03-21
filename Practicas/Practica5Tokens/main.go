@@ -147,7 +147,7 @@ func (s *StackVariables) VerVariables() {
 	for i := 0; i < s.count; i++ {
 		fmt.Println(fmt.Sprint("Ecuacion:", s.stackV[i].Ecuacion))
 		fmt.Println(fmt.Sprint("Identificador: ", s.stackV[i].Variable))
-		fmt.Println(fmt.Sprint("Valor: ", s.stackV[i].Valor))
+		fmt.Println(fmt.Sprint("Resultado: ", s.stackV[i].Valor))
 		fmt.Println("\n")
 	}
 }
@@ -225,7 +225,7 @@ func Menu(s *StackVariables) {
 	case 1:
 		fmt.Println("\n--------1: Ingresar una ecuacion--------\n")
 		fmt.Println("Digite la ecuacion en posfijo, separando por espacios")
-		fmt.Println("La ecuación debe terminar con el nombre de la variable (letra en mayúscula)")
+		fmt.Println("La ecuación debe terminar con el nombre de la variable (Variable inicia con letra en MAYÚSUCULA)")
 		fmt.Println("**OPCIONAL: nombreDeVariable + ':=' ****")
 		fmt.Print("\n--> Ingrese ecuación: ")
 		scanner := bufio.NewScanner(os.Stdin)
