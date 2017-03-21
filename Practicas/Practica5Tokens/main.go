@@ -146,7 +146,23 @@ func EncontrarVariable(cadenaCompleta string) ([]string, []string, string) {
 func (s *StackVariables) VerVariables() {
 	for i := 0; i < s.count; i++ {
 		fmt.Println(fmt.Sprint("Ecuacion:", s.stackV[i].Ecuacion))
+
+		ecuacion := s.stackV[i].Ecuacion
+		arr := strings.Split(ecuacion, " ")
+		for j := 0; j < len(arr); j++ {
+
+			var valorValido = regexp.MustCompile(`^[0-9]+$`)
+			if valorValido.MatchString(arr[j]) == true {
+				fmt.Println("Valor: ", arr[j])
+			}
+
+			if arr[j] == "+" || arr[j] == "-" || arr[j] == "*" || arr[j] == "/" {
+				fmt.Println("Operador: ", arr[j])
+			}
+		}
+
 		fmt.Println(fmt.Sprint("Identificador: ", s.stackV[i].Variable))
+		fmt.Println("Operador: :=")
 		fmt.Println(fmt.Sprint("Resultado: ", s.stackV[i].Valor))
 		fmt.Println("\n")
 	}
