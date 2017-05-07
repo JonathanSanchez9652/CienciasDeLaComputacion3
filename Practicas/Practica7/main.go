@@ -43,9 +43,10 @@ func (s *Stack) Pop() *Arbol {
 }
 
 type Variables struct {
-	Ecuacion string
-	Valor    string
-	Variable string
+	Ecuacion         string
+	Valor            string
+	Variable         string
+	EcuacionOriginal string
 }
 
 type StackVariables struct {
@@ -145,12 +146,28 @@ func EncontrarVariable(cadenaCompleta string) ([]string, []string, string) {
 
 func (s *StackVariables) VerVariables() {
 	for i := 0; i < s.count; i++ {
-		fmt.Println(fmt.Sprint("Ecuacion:", s.stackV[i].Ecuacion))
+
+		ecuacionOriginal := s.stackV[i].EcuacionOriginal    //CADENA
+		arrOriginal := strings.Split(ecuacionOriginal, " ") //ARREGLO
+		fmt.Println("Ecuación original: ", ecuacionOriginal)
+
+		for m := 0; m < len(arrOriginal); m++ {
+			if esVariable(arrOriginal[m]) == true {
+				for t := 0; t < s.count; t++ {
+					if arrOriginal[m] == s.stackV[t].Variable {
+						arrOriginal[m] = s.stackV[t].EcuacionOriginal
+					}
+				}
+			}
+		}
+		cadenaOriginal := strings.Join(arrOriginal, " ")
+		fmt.Println("Ecuación sustituida (si se ingresaron variables): ", cadenaOriginal)
 
 		ecuacion := s.stackV[i].Ecuacion
+		fmt.Println(fmt.Sprint("Ecuacion Simplificada: ", ecuacion))
 		arr := strings.Split(ecuacion, " ")
-		for j := 0; j < len(arr); j++ {
 
+		for j := 0; j < len(arr); j++ {
 			var valorValido = regexp.MustCompile(`^[0-9]+$`)
 			if valorValido.MatchString(arr[j]) == true {
 				fmt.Println("Valor: ", arr[j])
@@ -168,6 +185,46 @@ func (s *StackVariables) VerVariables() {
 	}
 }
 
+//*****************************************+
+func esVariable(v string) bool {
+
+	var validUno = regexp.MustCompile(`^[A-Z]+[a-z]+[_]+[0-9]+$`)
+	veriUno := validUno.MatchString(v)
+
+	var validDos = regexp.MustCompile(`^[A-Z]+[a-z]+$`)
+	veriDos := validDos.MatchString(v)
+
+	var validTres = regexp.MustCompile(`^[A-Z]+$`)
+	veriTres := validTres.MatchString(v)
+
+	if veriUno == true || veriDos == true || veriTres == true {
+		return true
+	}
+	return false
+}
+
+func quitaVariable(v string) string {
+	s1 := v
+	if last := len(s1) - 1; last >= 0 && s1[last] == '=' {
+		s1 = s1[:last]
+	}
+	if last := len(s1) - 1; last >= 0 && s1[last] == ' ' {
+		s1 = s1[:last]
+	}
+	if last := len(s1) - 1; last >= 0 && s1[last] == ':' {
+		s1 = s1[:last]
+	}
+	if last := len(s1) - 1; last >= 0 && s1[last] == ' ' {
+		s1 = s1[:last]
+	}
+	arr := strings.Split(s1, " ")
+	arr = arr[:len(arr)-1]
+
+	cadena := strings.Join(arr, " ")
+	return cadena
+}
+
+//*****************************************+
 func (s *StackVariables) imprimirVariable() string {
 	return s.stackV[s.count-1].Variable
 }
@@ -241,20 +298,21 @@ func Menu(s *StackVariables) {
 	case 1:
 		fmt.Println("\n--------1: Ingresar una ecuacion--------\n")
 		fmt.Println("Digite la ecuacion en posfijo, separando por espacios")
-		fmt.Println("La ecuación debe terminar con el nombre de la variable (Variable inicia con letra en MAYÚSUCULA)")
-		fmt.Println("**OPCIONAL: nombreDeVariable + ':=' ****")
+		fmt.Println("La ecuación debe terminar con el nombre de la variable (Variable inicia con letra en MAYÚSUCULA) :=")
 		fmt.Print("\n--> Ingrese ecuación: ")
 		scanner := bufio.NewScanner(os.Stdin)
 
 		for scanner.Scan() {
 
 			data := scanner.Text()
+
 			ecuacionNew, variables, variableNew := EncontrarVariable(data)
 			ecuacion := s.ValorVar(variables)
 			ecuacionFinal := IntercambiarEcuacion(ecuacionNew, ecuacion, variables)
 			result := InsertarPila(ecuacionFinal)
 			valorFinal := strconv.Itoa(Operacion(result))
-			s.PushV(&Variables{ecuacionFinal, valorFinal, variableNew})
+			ecuacionSinVariable := quitaVariable(data)
+			s.PushV(&Variables{ecuacionFinal, valorFinal, variableNew, ecuacionSinVariable})
 
 			if s.verificaVariableValida() == false {
 				fmt.Println("***** VARIABLE INVÁLIDA*********")
@@ -268,6 +326,7 @@ func Menu(s *StackVariables) {
 				fmt.Print("Ecuacion en infijo: ", s.imprimirVariable(), " := ")
 				InOrden(result)
 				fmt.Println("\nResultado: ", s.imprimirVariable(), " = ", Operacion(result))
+
 			}
 			break
 		}
@@ -285,6 +344,7 @@ func Menu(s *StackVariables) {
 
 func main() {
 	stack := NewStackVariables()
+
 	for {
 		fmt.Println("\n***ECUACIONES EN POSFIJO****\n")
 		fmt.Println("---->Presione la tecla indicada para seleccionar una opción:\n")
@@ -294,4 +354,5 @@ func main() {
 		fmt.Print("Ingrese su selección: ")
 		Menu(stack)
 	}
+
 }
